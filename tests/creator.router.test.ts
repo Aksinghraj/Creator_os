@@ -2,6 +2,13 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { appRouter } from "../server/routers";
 import type { TrpcContext } from "../server/_core/context";
 
+const dbMocks = vi.hoisted(() => ({
+  createArtifact: vi.fn(async () => 1),
+  listArtifacts: vi.fn(async () => []),
+  deleteArtifact: vi.fn(async () => {}),
+  countArtifacts: vi.fn(async () => ({ hook_analysis: 1 })),
+}));
+
 vi.mock("../server/_core/llm", () => ({
   invokeLLM: vi.fn(async () => ({
     id: "test",
@@ -39,13 +46,6 @@ vi.mock("../server/_core/llm", () => ({
     ],
   })),
 }));
-
-const dbMocks = {
-  createArtifact: vi.fn(async () => 1),
-  listArtifacts: vi.fn(async () => []),
-  deleteArtifact: vi.fn(async () => {}),
-  countArtifacts: vi.fn(async () => ({ hook_analysis: 1 })),
-};
 
 vi.mock("../server/db", () => dbMocks);
 
